@@ -24,7 +24,7 @@ public class Repository {
     }
     public List<String> getProductName(String name) {
         MapSqlParameterSource param = new MapSqlParameterSource("name", name);
-       return namedParameterJdbcTemplate.queryForList(scriptSelectFileName , param, String.class);
+       return namedParameterJdbcTemplate.queryForList(script , param, String.class);
 //        return Collections.singletonList(name);
     }
     public static String read(String scriptFileName) {

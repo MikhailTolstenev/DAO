@@ -1,14 +1,13 @@
-package ru.netology.Servis;
+package ru.netology.service;
 
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 import ru.netology.repository.Repository;
 
 import java.util.List;
 
-@Service
+@org.springframework.stereotype.Service
 @AllArgsConstructor
-public class servis {
+public class Service {
     private Repository repository;
 
     public List<String> getProductName(String name) {
