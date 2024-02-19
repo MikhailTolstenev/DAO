@@ -7,15 +7,15 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.netology.service.Service;
 
 import java.util.List;
-//import ru.netology.servise.Servise;
 
 @RestController
 @AllArgsConstructor
+
 public class Controller {
-    private Service servise;
+    private Service service;
     @GetMapping("/products/fetch-product")
     public List<String> getProductName(@RequestParam (value = "name", required = false) String name) {
-        return servise.getProductName(name);
+        return service.getProductName(name);
 
 }
         }
