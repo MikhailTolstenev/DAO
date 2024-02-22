@@ -1,9 +1,12 @@
 package ru.netology.repository;
 
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import ru.netology.entity.Entity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,24 +18,12 @@ import java.util.stream.Collectors;
 @org.springframework.stereotype.Repository
 
 public class Repository {
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private String scriptSelectFileName = "product_name11.sql";
-    private String script = read(scriptSelectFileName);
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public Repository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-    }
-    public List<String> getProductName(String name) {
-        MapSqlParameterSource param = new MapSqlParameterSource("name", name);
-       return namedParameterJdbcTemplate.queryForList(script , param, String.class);
-//        return Collections.singletonList(name);
-    }
-    public static String read(String scriptFileName) {
-        try (InputStream is = new ClassPathResource(scriptFileName).getInputStream();
-             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is))) {
-            return bufferedReader.lines().collect(Collectors.joining("\n"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-}
+
+    public List<Entity.Persons> getPersonsByCity(String city){
+        var query = entityManager.createQuery("select p from Persons p where lower(p.cityOfLiving) = lower(:city)", Entity.Persons.class);
+        query.setParameter("city",city);
+        return query.getResultList();
+}}

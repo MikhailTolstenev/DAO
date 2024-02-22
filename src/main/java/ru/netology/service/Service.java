@@ -1,6 +1,7 @@
 package ru.netology.service;
 
 import lombok.AllArgsConstructor;
+import ru.netology.entity.Entity;
 import ru.netology.repository.Repository;
 
 import java.util.List;
@@ -10,8 +11,8 @@ import java.util.List;
 public class Service {
     private Repository repository;
 
-    public List<String> getProductName(String name) {
+    public List<Entity.Persons> getPersonsByCity(String city) {
 
-        return repository.getProductName(name);
+        return repository.getPersonsByCity(city);
     }
 }
