@@ -1,38 +1,29 @@
 package ru.netology.repository;
 
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import ru.netology.entity.Orders;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Repository
 
 public class Repository {
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private String scriptSelectFileName = "product_name11.sql";
-    private String script = read(scriptSelectFileName);
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public Repository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+
+
+    public List<Orders> getProductName(String name) {
+        var query = entityManager.createQuery("select product_name from Orders B\n" +
+                        "         inner join Customers A on B.customer_id = A.id\n" +
+                        "where lower(A.name) = lower (:name)",
+                Orders.class);
+        query.setParameter("name",name);
+        return query.getResultList();
+
     }
-    public List<String> getProductName(String name) {
-        MapSqlParameterSource param = new MapSqlParameterSource("name", name);
-       return namedParameterJdbcTemplate.queryForList(script , param, String.class);
-//        return Collections.singletonList(name);
+
     }
-    public static String read(String scriptFileName) {
-        try (InputStream is = new ClassPathResource(scriptFileName).getInputStream();
-             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is))) {
-            return bufferedReader.lines().collect(Collectors.joining("\n"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-}
+
